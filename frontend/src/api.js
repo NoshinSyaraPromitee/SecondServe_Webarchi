@@ -1,0 +1,91 @@
+// Simple fetch wrapper for the SecondServe Spring Boot backend.
+// Backend runs at http://localhost:8080/api (see application.properties: server.servlet.context-path=/api)
+
+const BASE_URL = "http://localhost:8080/api";
+
+
+
+function getToken() {
+  return localStorage.getItem("token");
+}
+
+async function request(path, { method = "GET", body, auth = false } = {}) {
+  const headers = { "Content-Type": "application/json" };
+  if (auth) {
+    const token = getToken();
+    if (token) headers["Authorization"] = `Bearer ${token}`;
+  }
+
+  const res = await fetch(`${BASE_URL}${path}`, {
+    method,
+    headers,
+    body: body !== undefined ? JSON.stringify(body) : undefined,
+  });
+
+  if (!res.ok) {
+    let message = `Request failed (${res.status})`;
+    try {
+      const data = await res.json();
+      if (data?.message) message = data.message;
+    } catch {
+      // response had no JSON body
+    }
+    throw new Error(message);
+  }
+
+  if (res.status === 204) return null;
+  const text = await res.text();
+  return text ? JSON.parse(text) : null;
+}
+
+export const api = {
+  // --- Auth ---
+  login: (email, password, userType) =>
+      request("/auth/login", { method: "POST", body: { email, password, userType } }),
+
+  // --- Registration ---
+  registerHotel: (payload) => request("/hotels/register", { method: "POST", body: payload }),
+  registerNgo: (payload) => request("/ngos/register", { method: "POST", body: payload }),
+  registerKitchenStaff: (payload) => request("/staff/register", { method: "POST", body: payload }),
+
+  // --- Hotel dashboard ---
+  getDashboardStats: () => request("/hotels/dashboard-stats", { auth: true }),
+  getPendingFoodItems: (hotelId) => request(`/food-items/hotel/${hotelId}/pending`, { auth: true }),
+  getTodaysFoodItems: (hotelId) => request(`/food-items/hotel/${hotelId}/today`, { auth: true }),
+  getHotelFoodRequests: (hotelId, status) =>
+      request(`/food-requests/hotel/${hotelId}${status ? `?status=${status}` : ""}`, { auth: true }),
+  getHotelFoodLog: (hotelId) => request(`/food-items/hotel/${hotelId}/log`, { auth: true }),
+  // --- Food items ---
+  // auth:true here is optional on the backend (the endpoint is public), but
+  // sending the token when an NGO is logged in lets the backend tag each item
+  // with that NGO's own request status (Requested/Approved) instead of the
+  // "Request this food" button staying up after they've already requested it.
+  getAvailableFoodItems: () => request("/food-items/available", { auth: true }),
+  createFoodItem: (payload) => request("/food-items", { method: "POST", body: payload, auth: true }),
+  getMyFoodLog: () => request("/food-items/my-log", { auth: true }),
+  approveFoodItem: (id) => request(`/food-items/${id}/approve`, { method: "PUT", auth: true }),
+  rejectFoodItem: (id) => request(`/food-items/${id}`, { method: "DELETE", auth: true }),
+  markFoodItemUnavailable: (id) => request(`/food-items/${id}/unavailable`, { method: "PUT", auth: true }),
+
+  // --- Food requests (NGO <-> Hotel) ---
+  createFoodRequest: (payload) => request("/food-requests", { method: "POST", body: payload, auth: true }),
+  approveFoodRequest: (id) => request(`/food-requests/${id}/approve`, { method: "PUT", auth: true }),
+  rejectFoodRequest: (id) => request(`/food-requests/${id}/reject`, { method: "PUT", auth: true }),
+  completeFoodRequest: (id) => request(`/food-requests/${id}/complete`, { method: "PUT", auth: true }),
+  getNgoFoodRequests: (ngoId) => request(`/food-requests/ngo/${ngoId}`, { auth: true }),
+};
+
+export const session = {
+  save(authResponse) {
+    localStorage.setItem("token", authResponse.token);
+    localStorage.setItem("user", JSON.stringify(authResponse));
+  },
+  get() {
+    const raw = localStorage.getItem("user");
+    return raw ? JSON.parse(raw) : null;
+  },
+  clear() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+  },
+};
