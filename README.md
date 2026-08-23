@@ -10,6 +10,7 @@ The project contains:
     ├── frontend/         React + Vite application
     ├── docker-compose.yml
     └── README.md
+<img width="1920" height="1080" alt="Screenshot (123)" src="https://github.com/user-attachments/assets/58f18f7d-d598-4eca-a57d-495d55d71dc2" />
 
 ------------------------------------------------------------
 TECHNOLOGIES
@@ -128,6 +129,7 @@ This is the main SecondServe application.
 ============================================================
 APPLICATION URLS
 ============================================================
+<img width="1920" height="1080" alt="Screenshot (125)" src="https://github.com/user-attachments/assets/c3885a88-70bf-467f-a126-8b6fa5ba344b" />
 
 Frontend:
 
