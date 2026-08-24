@@ -58,12 +58,6 @@ export default function SignupNgo() {
                         NGO registration
                     </div>
 
-                    <h2>Register your NGO</h2>
-
-                    <p>
-                        Join SecondServe and connect your
-                        organization with surplus food donors.
-                    </p>
                 </div>
 
                 <form

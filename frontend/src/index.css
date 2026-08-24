@@ -495,6 +495,29 @@ button.danger:hover {
   color: var(--primary);
   font-weight: 600;
 }
+.auth-options {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.auth-option {
+  padding: 10px 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-soft);
+  text-decoration: none;
+  text-align: center;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.auth-option:hover {
+  background: var(--primary-light);
+  border-color: #a9c9b9;
+}
 
 /* =========================
    DASHBOARD
@@ -770,13 +793,13 @@ button.danger:hover {
 .how-it-works {
   width: min(1200px, 92%);
   margin: 70px auto 40px;
-  padding: 42px 44px 30px;
+  padding: 38px 40px 28px;
 
-  background: #f5f1e8;
-  border: 1px solid #ded8c9;
+  background: #E9FFE6;
+  border: 1px solid #cfe8ca;
   border-radius: 28px;
 
-  box-shadow: 0 14px 35px rgba(31, 58, 43, 0.08);
+  box-shadow: 0 14px 35px rgba(31, 58, 43, 0.07);
 
   overflow: hidden;
 }
@@ -840,13 +863,12 @@ button.danger:hover {
 
 .journey {
   display: flex;
-  align-items: stretch;
-
+  align-items: center;
+  justify-content: center;
   gap: 0;
 
-  padding: 38px 0 34px;
+  padding: 32px 0 28px;
 }
-
 
 /* =========================================================
    STEP CARDS
@@ -855,19 +877,19 @@ button.danger:hover {
 .journey-step {
   position: relative;
 
-  flex: 1;
+  flex: 0 1 auto;
 
-  min-height: 225px;
+  min-height: 0;
+  width: auto;
 
-  padding: 22px 22px 20px;
+  padding: 18px 20px 18px;
 
-  border-radius: 20px;
+  border-radius: 18px;
 
   transition:
           transform 0.25s ease,
           box-shadow 0.25s ease;
 }
-
 .journey-step:hover {
   transform: translateY(-5px);
 
@@ -992,16 +1014,12 @@ button.danger:hover {
 }
 
 
-/* =========================================================
-   CARD TEXT
-   ========================================================= */
-
 .journey-step h3 {
-  margin: 0 0 7px;
+  margin: 0 0 6px;
 
   color: #193c2b;
 
-  font-size: 1.02rem;
+  font-size: 1rem;
   font-weight: 750;
 }
 
@@ -1011,10 +1029,10 @@ button.danger:hover {
   color: #637068;
 
   font-size: 0.74rem;
+  line-height: 1.5;
 
-  line-height: 1.6;
+  max-width: 190px;
 }
-
 
 /* Dark card */
 
@@ -1060,14 +1078,13 @@ button.danger:hover {
   align-items: center;
   justify-content: center;
 
-  background: #f5f1e8;
+  background: #E9FFE6;
 
   color: #547861;
 
   font-size: 1.55rem;
   font-weight: 400;
 }
-
 
 /* =========================================================
    BOTTOM LABEL
@@ -1310,29 +1327,7 @@ button.danger:hover {
     transform: scale(1.04);
   }
 
-  .auth-options {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-top: 12px;
-  }
 
-  .auth-option {
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    padding: 7px 12px;
-    text-decoration: none;
-    color: #374151;
-    background: #fff;
-    transition: all 0.2s ease;
-  }
-
-  .auth-option:hover {
-    border-color: #dc2626;
-    color: #dc2626;
-    background: #fef2f2;
-  }
 
   .stat-card.clickable {
     cursor: pointer;

@@ -54,16 +54,11 @@ export default function SignupHotel() {
         <Layout>
             <div className="food-form-card">
                 <div className="food-form-header">
-                    <div className="hero-eyebrow">
-                        Hotel registration
-                    </div>
+
 
                     <h2>Register your hotel</h2>
 
-                    <p>
-                        Create a SecondServe account for your
-                        hotel and start managing food donations.
-                    </p>
+
                 </div>
 
                 <form

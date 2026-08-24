@@ -57,12 +57,7 @@ export default function SignupStaff() {
                             Kitchen team
                         </div>
 
-                        <h2>Join as kitchen staff</h2>
 
-                        <p>
-                            Log surplus food directly from the
-                            kitchen and help reduce food waste.
-                        </p>
                     </div>
 
                     <form
