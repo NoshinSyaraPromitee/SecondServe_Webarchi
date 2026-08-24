@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { api } from "../api";
+
 import Layout from "../components/Layout";
 import ErrorText from "../components/ErrorText";
+import { api, uploadImageToCloudinary } from "../api";
 
 const CONDITION_LABELS = {
     FRESH: "Fresh",
@@ -29,6 +30,9 @@ export default function KitchenDashboard() {
         category: "PREPARED_FOOD",
         condition: "FRESH",
     });
+    const [imageFile, setImageFile] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
+    const [uploading, setUploading] = useState(false);
 
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
@@ -67,7 +71,12 @@ export default function KitchenDashboard() {
             });
         };
     }
-
+    function handleImageChange(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        setImageFile(file);
+        setImagePreview(URL.createObjectURL(file));
+    }
     async function handleSubmit(e) {
         e.preventDefault();
 
@@ -76,9 +85,16 @@ export default function KitchenDashboard() {
         setLoading(true);
 
         try {
+            let imageUrl = null;
+            if (imageFile) {
+                setUploading(true);
+                imageUrl = await uploadImageToCloudinary(imageFile);
+                setUploading(false);
+            }
             await api.createFoodItem({
                 ...form,
                 quantity: Number(form.quantity),
+                imageUrl
             });
 
             setSuccess(
@@ -94,7 +110,8 @@ export default function KitchenDashboard() {
                 category: "PREPARED_FOOD",
                 condition: "FRESH",
             });
-
+            setImageFile(null);
+            setImagePreview(null);
             loadLog();
         } catch (err) {
             setError(
@@ -235,6 +252,23 @@ export default function KitchenDashboard() {
                                 onChange={update("description")}
                             />
                         </label>
+                        <label className="full">
+                            Food photo
+
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={handleImageChange}
+                            />
+                        </label>
+
+                        {imagePreview && (
+                            <img
+                                src={imagePreview}
+                                alt="Preview"
+                                style={{ maxWidth: "150px", borderRadius: "8px" }}
+                            />
+                        )}
                     </div>
 
                     <ErrorText>{error}</ErrorText>
@@ -249,7 +283,9 @@ export default function KitchenDashboard() {
                         type="submit"
                         disabled={loading}
                     >
-                        {loading
+                        {uploading
+                            ? "Uploading image..."
+                            : loading
                             ? "Logging food..."
                             : "Log surplus food"}
                     </button>

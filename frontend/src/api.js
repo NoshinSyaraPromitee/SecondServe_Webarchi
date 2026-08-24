@@ -66,7 +66,7 @@ export const api = {
   approveFoodItem: (id) => request(`/food-items/${id}/approve`, { method: "PUT", auth: true }),
   rejectFoodItem: (id) => request(`/food-items/${id}`, { method: "DELETE", auth: true }),
   markFoodItemUnavailable: (id) => request(`/food-items/${id}/unavailable`, { method: "PUT", auth: true }),
-
+  getCloudinarySignature: () => request("/cloudinary/signature", { auth: true }),
   // --- Food requests (NGO <-> Hotel) ---
   createFoodRequest: (payload) => request("/food-requests", { method: "POST", body: payload, auth: true }),
   approveFoodRequest: (id) => request(`/food-requests/${id}/approve`, { method: "PUT", auth: true }),
@@ -88,4 +88,27 @@ export const session = {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
   },
+
 };
+export async function uploadImageToCloudinary(file) {
+  const sigRes = await request("/cloudinary/signature", { auth: true });
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("api_key", sigRes.apiKey);
+  formData.append("timestamp", sigRes.timestamp);
+  formData.append("signature", sigRes.signature);
+  formData.append("folder", sigRes.folder);
+
+  const uploadRes = await fetch(
+    `https://api.cloudinary.com/v1_1/${sigRes.cloudName}/image/upload`,
+    { method: "POST", body: formData }
+  );
+
+  if (!uploadRes.ok) {
+    throw new Error("Image upload failed. Please try again.");
+  }
+
+  const data = await uploadRes.json();
+  return data.secure_url;
+}

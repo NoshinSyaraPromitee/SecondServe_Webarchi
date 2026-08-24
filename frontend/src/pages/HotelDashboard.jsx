@@ -191,6 +191,13 @@ export default function HotelDashboard() {
                                     key={item.id}
                                     className="list-row"
                                 >
+                                    {item.imageUrl &&(
+                                        <img
+                                            src={item.imageUrl}
+                                            alt={item.foodName}
+                                            style={{ width: "56px", height: "56px", objectFit: "cover", borderRadius: "6px", marginRight: "10px" }}
+                                            />
+                                        )}
                                     <div>
                                         <strong>
                                             {item.foodName}
@@ -258,6 +265,13 @@ export default function HotelDashboard() {
                                 key={item.id}
                                 className="list-row"
                             >
+                                {item.imageUrl &&(
+                                <img
+                                    src={item.imageUrl}
+                                    alt={item.foodName}
+                                    style={{ width: "56px", height: "56px", objectFit: "cover", borderRadius: "6px", marginRight: "10px" }}
+                                    />
+                                )}
                                 <div>
                                     <strong>
                                         {item.foodName}

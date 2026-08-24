@@ -132,7 +132,13 @@ export default function NgoPortal() {
                                     {item.unit}
                                 </div>
                             </div>
-
+                             {item.imageUrl && (
+                                 <img
+                                    src={item.imageUrl}
+                                    alt={item.foodName}
+                                    style={{ width: "100%", height: "140px", objectFit: "cover", borderRadius: "8px", marginBottom: "8px" }}
+                                    />
+                             )}
                             <div className="food-meta">
                                <span
                                    style={{
