@@ -88,8 +88,10 @@ export default function KitchenDashboard() {
             let imageUrl = null;
             if (imageFile) {
                 setUploading(true);
-                imageUrl = await uploadImageToCloudinary(imageFile);
-                setUploading(false);
+                try{
+                imageUrl = await uploadImageToCloudinary(imageFile);}
+                finally{
+                setUploading(false);}
             }
             await api.createFoodItem({
                 ...form,

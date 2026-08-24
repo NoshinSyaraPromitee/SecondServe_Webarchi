@@ -105,10 +105,11 @@ export async function uploadImageToCloudinary(file) {
     { method: "POST", body: formData }
   );
 
-  if (!uploadRes.ok) {
-    throw new Error("Image upload failed. Please try again.");
-  }
-
+    if (!uploadRes.ok) {
+      const errBody = await uploadRes.json().catch(() => null);
+      console.error("Cloudinary upload error:", errBody);
+      throw new Error(errBody?.error?.message || "Image upload failed. Please try again.");
+    }
   const data = await uploadRes.json();
   return data.secure_url;
 }

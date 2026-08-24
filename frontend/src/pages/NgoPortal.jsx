@@ -11,6 +11,10 @@ export default function NgoPortal() {
     const [error, setError] = useState("");
     const [notice, setNotice] = useState("");
 
+    const [requestModalItem, setRequestModalItem] = useState(null);
+    const [requestQty, setRequestQty] = useState("");
+    const [submitting, setSubmitting] = useState(false);
+
     async function loadAll() {
         try {
             const [available, mine] =
@@ -32,43 +36,50 @@ export default function NgoPortal() {
     useEffect(() => {
         loadAll();
 
-        // No push/websocket notifications exist in this app — the only way
-        // the NGO finds out a hotel approved an item is by re-fetching.
-        // Poll every 10s so newly approved food (and request status changes)
-        // show up without the NGO having to manually refresh the page.
         const intervalId = setInterval(loadAll, 10000);
         return () => clearInterval(intervalId);
     }, []);
 
-    async function requestItem(item) {
-        setNotice("");
+    function openRequestModal(item) {
         setError("");
+        setNotice("");
+        setRequestQty(String(item.quantity));
+        setRequestModalItem(item);
+    }
 
-        const qty = window.prompt(
-            `How much ${item.unit} of "${item.foodName}" would you like to request?`,
-            item.quantity
-        );
+    function closeRequestModal() {
+        setRequestModalItem(null);
+        setRequestQty("");
+    }
 
-        if (!qty) return;
+    async function confirmRequest() {
+        const qty = Number(requestQty);
+
+        if (!requestQty || Number.isNaN(qty) || qty <= 0) {
+            setError("Enter a valid quantity.");
+            return;
+        }
+
+        setSubmitting(true);
 
         try {
             await api.createFoodRequest({
                 ngoId: user.userId,
-                foodItemId: item.id,
-                requestedQuantity: Number(qty),
-                unit: item.unit,
+                foodItemId: requestModalItem.id,
+                requestedQuantity: qty,
+                unit: requestModalItem.unit,
             });
 
-            setNotice(
-                "Request sent successfully."
-            );
-
+            setNotice("Request sent successfully.");
+            closeRequestModal();
             loadAll();
         } catch (err) {
             setError(
                 err.message ||
                 "Could not send request."
             );
+        } finally {
+            setSubmitting(false);
         }
     }
 
@@ -77,8 +88,6 @@ export default function NgoPortal() {
             <div className="dashboard-header">
                 <div>
                     <h2>Available food</h2>
-
-
                 </div>
 
                 <span className="badge approved">
@@ -132,28 +141,30 @@ export default function NgoPortal() {
                                     {item.unit}
                                 </div>
                             </div>
-                             {item.imageUrl && (
-                                 <img
+
+                            {item.imageUrl && (
+                                <img
                                     src={item.imageUrl}
                                     alt={item.foodName}
                                     style={{ width: "100%", height: "140px", objectFit: "cover", borderRadius: "8px", marginBottom: "8px" }}
-                                    />
-                             )}
+                                />
+                            )}
+
                             <div className="food-meta">
-                               <span
-                                   style={{
-                                       border: "1px solid #dc2626",
-                                       color: "#dc2626",
-                                       backgroundColor: "#fef2f2",
-                                       padding: "4px 8px",
-                                       borderRadius: "6px",
-                                       display: "inline-block",
-                                       fontSize: "13px",
-                                       fontWeight: "500",
-                                   }}
-                               >
-    Expires {item.expiryDate}
-</span>
+                                <span
+                                    style={{
+                                        border: "1px solid #dc2626",
+                                        color: "#dc2626",
+                                        backgroundColor: "#fef2f2",
+                                        padding: "4px 8px",
+                                        borderRadius: "6px",
+                                        display: "inline-block",
+                                        fontSize: "13px",
+                                        fontWeight: "500",
+                                    }}
+                                >
+                                    Expires {item.expiryDate}
+                                </span>
 
                                 {item.description && (
                                     <span>
@@ -166,15 +177,11 @@ export default function NgoPortal() {
                                 <span
                                     className={`badge ${item.currentUserRequestStatus.toLowerCase()}`}
                                 >
-                                    {
-                                        item.currentUserRequestStatus
-                                    }
+                                    {item.currentUserRequestStatus}
                                 </span>
                             ) : (
                                 <button
-                                    onClick={() =>
-                                        requestItem(item)
-                                    }
+                                    onClick={() => openRequestModal(item)}
                                 >
                                     Request this food
                                 </button>
@@ -188,8 +195,6 @@ export default function NgoPortal() {
                 <div className="dashboard-section-header">
                     <div>
                         <h3>My requests</h3>
-
-
                     </div>
                 </div>
 
@@ -226,6 +231,53 @@ export default function NgoPortal() {
                     </ul>
                 )}
             </section>
+
+            {requestModalItem && (
+                <div
+                    className="modal-overlay"
+                    onClick={closeRequestModal}
+                >
+                    <div
+                        className="modal-card"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <h3>Request food</h3>
+                        <p>
+                            How much {requestModalItem.unit} of "{requestModalItem.foodName}" would you like to request?
+                        </p>
+
+                        <input
+                            type="number"
+                            step="0.1"
+                            min="0"
+                            autoFocus
+                            value={requestQty}
+                            onChange={(e) => setRequestQty(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") confirmRequest();
+                            }}
+                        />
+
+                        <ErrorText>{error}</ErrorText>
+
+                        <div className="modal-actions">
+                            <button
+                                className="secondary"
+                                onClick={closeRequestModal}
+                                disabled={submitting}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={confirmRequest}
+                                disabled={submitting}
+                            >
+                                {submitting ? "Sending..." : "Send request"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </Layout>
     );
 }

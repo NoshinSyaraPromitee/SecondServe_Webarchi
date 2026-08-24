@@ -195,7 +195,7 @@ export default function HotelDashboard() {
                                         <img
                                             src={item.imageUrl}
                                             alt={item.foodName}
-                                            style={{ width: "56px", height: "56px", objectFit: "cover", borderRadius: "6px", marginRight: "10px" }}
+                                            style={{ width: "80px", height: "80px", objectFit: "cover", borderRadius: "6px", marginRight: "10px" }}
                                             />
                                         )}
                                     <div>
@@ -269,7 +269,7 @@ export default function HotelDashboard() {
                                 <img
                                     src={item.imageUrl}
                                     alt={item.foodName}
-                                    style={{ width: "56px", height: "56px", objectFit: "cover", borderRadius: "6px", marginRight: "10px" }}
+                                    style={{ width: "80px", height: "80px", objectFit: "cover", borderRadius: "6px", marginRight: "10px" }}
                                     />
                                 )}
                                 <div>
