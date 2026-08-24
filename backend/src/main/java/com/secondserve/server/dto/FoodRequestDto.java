@@ -13,7 +13,7 @@ public class FoodRequestDto {
     private Long foodItemId;
     private String foodItemName;
     private String hotelName;
-
+    private String imageUrl;
     @NotNull(message = "Requested quantity is required")
     @Positive(message = "Requested quantity must be positive")
     private BigDecimal requestedQuantity;
@@ -68,4 +68,7 @@ public class FoodRequestDto {
 
     public String getNotes() { return notes; }
     public void setNotes(String notes) { this.notes = notes; }
+
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 }

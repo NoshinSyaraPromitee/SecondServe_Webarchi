@@ -118,6 +118,7 @@ public class FoodRequestService {
         dto.setRequestStatus(request.getRequestStatus());
         dto.setRequestDate(request.getRequestDate());
         dto.setNotes(request.getNotes());
+        dto.setImageUrl(request.getFoodItem().getImageUrl());
         return dto;
     }
 
