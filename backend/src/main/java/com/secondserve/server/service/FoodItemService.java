@@ -95,7 +95,7 @@ public class FoodItemService {
         foodItem.setDescription(foodItemDto.getDescription());
         foodItem.setCategory(foodItemDto.getCategory());
         foodItem.setCondition(foodItemDto.getCondition());
-
+        foodItem.setImageUrl(foodItemDto.getImageUrl());
         if(foodItemDto.getIsAvailable() != null) {
             foodItem.setIsAvailable(foodItemDto.getIsAvailable());
         }
@@ -128,6 +128,7 @@ public class FoodItemService {
         dto.setUnit(foodItem.getUnit());
         dto.setExpiryDate(foodItem.getExpiryDate());
         dto.setDescription(foodItem.getDescription());
+        dto.setImageUrl(foodItem.getImageUrl());
         dto.setCategory(foodItem.getCategory());
         dto.setCondition(foodItem.getCondition());
         dto.setIsAvailable(foodItem.getIsAvailable());
@@ -151,6 +152,7 @@ public class FoodItemService {
         foodItem.setDescription(dto.getDescription());
         foodItem.setCategory(dto.getCategory());
         foodItem.setCondition(dto.getCondition());
+        foodItem.setImageUrl(dto.getImageUrl());
         return foodItem;
     }
     public List<FoodItemDto> getFoodItemsByHotelPending(Long hotelId) {

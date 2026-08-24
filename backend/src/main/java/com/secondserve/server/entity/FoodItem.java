@@ -49,7 +49,8 @@ public class FoodItem {
     private LocalDate expiryDate;
 
     private String description;
-
+    @Column(name = "image_url")
+    private String imageUrl;
     @Column(name = "is_available", nullable = false)
     private Boolean isAvailable = false;
 
@@ -95,6 +96,8 @@ public class FoodItem {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
     public Boolean getIsAvailable() { return isAvailable; }
     public void setIsAvailable(Boolean available) { isAvailable = available; }
 

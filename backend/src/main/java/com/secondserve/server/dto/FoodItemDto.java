@@ -38,7 +38,8 @@ public class FoodItemDto {
     // Optional notes field
     private String description;
 
-    
+    private String imageUrl;
+
     @NotNull(message = "Category is required")
     private FoodItem.Category category;
 
@@ -49,10 +50,7 @@ public class FoodItemDto {
 
 
     // --- Constructors, Getters, and Setters ---
-    // A no-argument constructor is required for JSON deserialization
     public FoodItemDto() {}
-
-    // Getters and Setters for all remaining fields...
     
 
     public Long getId() { return id; }
@@ -83,6 +81,8 @@ public class FoodItemDto {
     public Boolean getIsAvailable() { return isAvailable; }
     public void setIsAvailable(Boolean isAvailable) { this.isAvailable = isAvailable; }
 
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
     public LocalDateTime getCreatedDate() { return createdDate; }
     public void setCreatedDate(LocalDateTime createdDate) { this.createdDate = createdDate; }
 
