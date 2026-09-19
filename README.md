@@ -1,520 +1,172 @@
 # SecondServe
 
-SecondServe is a food redistribution platform that connects hotel kitchens
-with NGOs to reduce food waste.
+SecondServe is a food redistribution platform that connects hotel kitchens with NGOs to reduce food waste.
 
-The project contains:
+<img width="1920" height="1080" alt="SecondServe home screen" src="https://github.com/user-attachments/assets/58f18f7d-d598-4eca-a57d-495d55d71dc2" />
 
-    SecondServe/
-    ├── backend/          Spring Boot REST API
-    ├── frontend/         React + Vite application
-    ├── docker-compose.yml
-    └── README.md
-<img width="1920" height="1080" alt="Screenshot (123)" src="https://github.com/user-attachments/assets/58f18f7d-d598-4eca-a57d-495d55d71dc2" />
+## Project Structure
 
-------------------------------------------------------------
-TECHNOLOGIES
-------------------------------------------------------------
+```
+SecondServe/
+├── backend/          Spring Boot REST API
+├── frontend/         React + Vite application
+├── docker-compose.yml
+└── README.md
+```
 
-Frontend     : React + Vite
-Backend      : Spring Boot
-Database     : MySQL 8
-Authentication: JWT
-Containerization: Docker / Docker Compose
-Java         : Java 17
+## Tech Stack
 
+| Layer            | Technology              |
+|-------------------|--------------------------|
+| Frontend          | React + Vite             |
+| Backend           | Spring Boot (Java 17)    |
+| Database          | MySQL 8                  |
+| Authentication    | JWT                      |
+| Containerization  | Docker / Docker Compose  |
 
-============================================================
-QUICK START - RECOMMENDED METHOD
-============================================================
+---
 
-The easiest way to run the complete project is with Docker.
+## Quick Start (Recommended: Docker)
 
-You only need:
+You only need **Docker Desktop** and this project — no local Java, Maven, Node.js, or MySQL installs required.
 
-    1. Docker Desktop
-    2. This project
+1. **Start Docker Desktop** and confirm it's running:
+   ```bash
+   docker --version
+   docker compose version
+   ```
 
-You do NOT need to install Java, Maven, Node.js, or MySQL
-separately when using Docker.
+2. **Go to the project folder:**
+   ```bash
+   cd "D:\SecondServe"
+   ```
 
+3. **Build and start everything:**
+   ```bash
+   docker compose up --build
+   ```
+   This starts MySQL, the Spring Boot backend, and the React frontend. The first build may take a few minutes.
 
-------------------------------------------------------------
-STEP 1 - START DOCKER DESKTOP
-------------------------------------------------------------
+4. **Wait for the backend to finish starting.** Look for:
+   ```
+   Started SecondServeServerApplication
+   ```
+   You'll also see a lot of Spring Security filter logging (`FilterChainProxy`, `SecurityContextHolderFilter`, `OncePerRequestFilter`, etc.) — that's normal, not an error.
 
-Open Docker Desktop and make sure it is running.
+5. **Open the app:** [http://localhost:5173](http://localhost:5173)
 
-Check Docker from PowerShell:
+Once the images are built, you don't need `--build` again — just run `docker compose up`. Only use `--build` after you've changed the project code.
 
-    docker --version
+### Application URLs
 
-Then check Docker Compose:
+| Service      | URL                              |
+|--------------|-----------------------------------|
+| Frontend     | http://localhost:5173             |
+| Backend API  | http://localhost:8080/api         |
+| MySQL        | localhost:3307 (maps to container port 3306) |
 
-    docker compose version
+<img width="1920" height="1080" alt="SecondServe dashboard" src="https://github.com/user-attachments/assets/c3885a88-70bf-467f-a126-8b6fa5ba344b" />
 
-Both commands should display version information.
+---
 
+## Verifying Everything Is Running
 
-------------------------------------------------------------
-STEP 2 - OPEN THE PROJECT FOLDER
-------------------------------------------------------------
+```bash
+docker ps
+```
 
-Open PowerShell and go to the folder containing SecondServe.
+You should see three containers **Up**: `secondserve-frontend`, `secondserve-backend`, `secondserve-mysql`.
 
-Example:
+Check logs for either service if something looks wrong:
+```bash
+docker logs secondserve-backend --tail 100
+docker logs secondserve-frontend --tail 100
+```
 
-    cd "D:\SecondServe"
+For the backend, a healthy startup ends with `Started SecondServeServerApplication`. If you instead see `APPLICATION FAILED TO START` or `Caused by:`, the backend hit a real startup error — check the log for the underlying cause.
 
-Check that you are in the correct folder:
+---
 
-    dir
+## Stopping / Restarting
 
-You should see something similar to:
+| Action                              | Command                    |
+|--------------------------------------|-----------------------------|
+| Stop containers (keep data)          | `docker compose down`      |
+| Start again (no rebuild needed)      | `docker compose up`        |
+| Reset database (⚠️ deletes all data) | `docker compose down -v` then `docker compose up --build` |
 
-    backend
-    frontend
-    docker-compose.yml
-    README.md
+---
 
+## Manual Setup (Without Docker)
 
-------------------------------------------------------------
-STEP 3 - START THE COMPLETE APPLICATION
-------------------------------------------------------------
+Requires Java 17+, Maven, MySQL 8, and Node.js 18+.
 
-Run:
-
-    docker compose up --build
-
-Docker will start:
-
-    1. MySQL database
-    2. Spring Boot backend
-    3. React frontend
-
-The first build may take several minutes.
-
-
-------------------------------------------------------------
-STEP 4 - WAIT FOR THE BACKEND
-------------------------------------------------------------
-
-Watch the terminal.
-
-The backend has successfully started when you see:
-
-    Started SecondServeServerApplication
-
-You may also see many Spring Security messages such as:
-
-    FilterChainProxy
-    SecurityContextHolderFilter
-    OncePerRequestFilter
-    DisableEncodeUrlFilter
-
-These messages are not necessarily errors.
-
-
-------------------------------------------------------------
-STEP 5 - OPEN THE APPLICATION
-------------------------------------------------------------
-
-Open your browser and go to:
-
-    http://localhost:5173
-
-This is the main SecondServe application.
-
-
-============================================================
-APPLICATION URLS
-============================================================
-<img width="1920" height="1080" alt="Screenshot (125)" src="https://github.com/user-attachments/assets/c3885a88-70bf-467f-a126-8b6fa5ba344b" />
-
-Frontend:
-
-    http://localhost:5173
-
-Backend API:
-
-    http://localhost:8080/api
-
-MySQL:
-
-    localhost:3306
-
-
-============================================================
-HOW TO CHECK IF EVERYTHING IS RUNNING
-============================================================
-
-Open another PowerShell window.
-
-Run:
-
-    docker ps
-
-You should see the SecondServe containers running.
-
-Look for containers similar to:
-
-    secondserve-frontend
-    secondserve-backend
-    secondserve-mysql
-
-Their status should contain:
-
-    Up
-
-
-------------------------------------------------------------
-CHECK BACKEND LOGS
-------------------------------------------------------------
-
-Run:
-
-    docker logs secondserve-backend --tail 100
-
-Look for:
-
-    Started SecondServeServerApplication
-
-If you see:
-
-    APPLICATION FAILED TO START
-
-or:
-
-    Caused by:
-
-then the backend has encountered an actual startup error.
-
-
-------------------------------------------------------------
-CHECK FRONTEND LOGS
-------------------------------------------------------------
-
-Run:
-
-    docker logs secondserve-frontend --tail 100
-
-
-============================================================
-PROJECT DEMONSTRATION
-============================================================
-
-For the teacher demonstration, open:
-
-    http://localhost:5173
-
-Recommended demonstration flow:
-
-    Role Selection
-          |
-          v
-    Hotel Manager
-          |
-          v
-    Kitchen Staff
-          |
-          v
-         NGO
-
-
-------------------------------------------------------------
-1. HOTEL MANAGER
-------------------------------------------------------------
-
-Demonstrate:
-
-    - Login
-    - Hotel dashboard
-    - Surplus food management
-    - Donation requests
-    - Approving/rejecting requests
-    - Statistics
-
-
-------------------------------------------------------------
-2. KITCHEN STAFF
-------------------------------------------------------------
-
-Demonstrate how kitchen staff can record surplus food.
-
-Example:
-
-    Food: Cooked Rice
-    Quantity: 20 portions
-    Description: Surplus food from today's preparation
-
-Submit the food information.
-
-
-------------------------------------------------------------
-3. NGO
-------------------------------------------------------------
-
-Demonstrate:
-
-    - Viewing available surplus food
-    - Viewing food details
-    - Requesting food
-    - Viewing request status
-
-
-============================================================
-HOW TO STOP THE PROJECT
-============================================================
-
-When the demonstration is finished:
-
-    Press Ctrl + C
-
-Then run:
-
-    docker compose down
-
-This stops the containers without deleting the database volume.
-
-
-============================================================
-HOW TO START IT AGAIN
-============================================================
-
-After the project has already been built:
-
-    docker compose up
-
-Then open:
-
-    http://localhost:5173
-
-You do NOT need --build every time.
-
-Use:
-
-    docker compose up --build
-
-when you have changed the project and need Docker to rebuild
-the application.
-
-
-============================================================
-RESET THE DATABASE
-============================================================
-
-WARNING:
-This will delete the Docker database volume and all stored data.
-
-Only use this if you intentionally want a fresh database.
-
-Run:
-
-    docker compose down -v
-
-Then:
-
-    docker compose up --build
-
-
-============================================================
-MANUAL SETUP - WITHOUT DOCKER
-============================================================
-
-Docker is recommended.
-
-If you want to run the project manually, you need:
-
-    - Java 17+
-    - Maven
-    - MySQL 8
-    - Node.js 18+
-
-
-------------------------------------------------------------
-BACKEND
-------------------------------------------------------------
-
-Go to:
-
-    cd backend
-
-Create the database:
-
-    CREATE DATABASE secondserve_db;
-
-Create the database user:
-
-    CREATE USER 'second_serve'@'localhost'
-    IDENTIFIED BY 'second_serve';
-
-Grant permissions:
-
-    GRANT ALL PRIVILEGES ON secondserve_db.*
-    TO 'second_serve'@'localhost';
-
-Start Spring Boot:
-
-    mvn spring-boot:run
-
-Backend:
-
-    http://localhost:8080/api
-
-
-------------------------------------------------------------
-FRONTEND
-------------------------------------------------------------
-
-Open another terminal.
-
-Go to:
-
-    cd frontend
-
-Install dependencies:
-
-    npm install
-
-Start the frontend:
-
-    npm run dev
-
-Frontend:
-
-    http://localhost:5173
-
-
-============================================================
-AUTHENTICATION
-============================================================
-
-SecondServe uses JWT authentication.
-
-After login, the JWT token is stored in the browser's
-localStorage and sent to the backend using:
-
-    Authorization: Bearer <token>
-
-
-============================================================
-TROUBLESHOOTING
-============================================================
-
-PROBLEM:
-Docker command is not recognized.
-
-SOLUTION:
-Install Docker Desktop and make sure Docker Desktop is running.
-
-
-PROBLEM:
-Frontend does not open.
-
-Check:
-
-    docker ps
-
-Then check:
-
-    docker logs secondserve-frontend --tail 100
-
-Try:
-
-    http://localhost:5173
-
-
-PROBLEM:
-Backend container stops.
-
-Run:
-
-    docker logs secondserve-backend --tail 100
-
-Look for:
-
-    ERROR
-    APPLICATION FAILED TO START
-    Caused by:
-
-
-PROBLEM:
-There are many Spring Security messages.
-
-Messages such as:
-
-    FilterChainProxy
-    SecurityContextHolderFilter
-    OncePerRequestFilter
-
-can be normal Spring Security logging.
-
-Look for:
-
-    Started SecondServeServerApplication
-
-to confirm successful startup.
-
-
-============================================================
-QUICK COMMANDS
-============================================================
-
-START FOR THE FIRST TIME:
-
-    cd "D:\SecondServe"
-    docker compose up --build
-
-
-START AFTER FIRST BUILD:
-
-    cd "D:\SecondServe"
-    docker compose up
-
-
-CHECK CONTAINERS:
-
-    docker ps
-
-
-CHECK BACKEND:
-
-    docker logs secondserve-backend --tail 100
-
-
-CHECK FRONTEND:
-
-    docker logs secondserve-frontend --tail 100
-
-
-STOP:
-
-    docker compose down
-
-
-RESET DATABASE:
-
-    docker compose down -v
-
-
-OPEN APPLICATION:
-
-    http://localhost:5173
-
-
-============================================================
-DEMO SUMMARY
-============================================================
-
-    1. Open Docker Desktop
-    2. Open PowerShell
-    3. cd "D:\SecondServe"
-    4. docker compose up --build
-    5. Wait for "Started SecondServeServerApplication"
-    6. Open http://localhost:5173
-    7. Demonstrate Hotel Manager
-    8. Demonstrate Kitchen Staff
-    9. Demonstrate NGO
-   10. Show the complete food redistribution workflow
-
-============================================================
+**Backend**
+```bash
+cd backend
+```
+Set up the database:
+```sql
+CREATE DATABASE secondserve_db;
+CREATE USER 'second_serve'@'localhost' IDENTIFIED BY 'second_serve';
+GRANT ALL PRIVILEGES ON secondserve_db.* TO 'second_serve'@'localhost';
+```
+Run the backend:
+```bash
+mvn spring-boot:run
+```
+Available at [http://localhost:8080/api](http://localhost:8080/api).
+
+**Frontend**
+```bash
+cd frontend
+npm install
+npm run dev
+```
+Available at [http://localhost:5173](http://localhost:5173).
+
+---
+
+## Authentication
+
+SecondServe uses JWT authentication. After login, the token is stored in the browser's `localStorage` and sent on subsequent requests as:
+```
+Authorization: Bearer <token>
+```
+
+---
+
+## Project Demonstration Flow
+
+For a walkthrough (e.g. a teacher demo), open [http://localhost:5173](http://localhost:5173) and follow:
+
+**Role Selection → Hotel Manager → Kitchen Staff → NGO**
+
+**1. Hotel Manager**
+- Login → Hotel dashboard
+- Surplus food management
+- View and approve/reject donation requests
+- Dashboard statistics
+
+**2. Kitchen Staff**
+- Record surplus food, e.g.:
+  - Food: Cooked Rice
+  - Quantity: 20 portions
+  - Description: Surplus food from today's preparation
+- Submit the entry
+
+**3. NGO**
+- View available surplus food and details
+- Request food
+- Track request status
+
+---
+
+## Troubleshooting
+
+| Problem | Solution |
+|---|---|
+| `docker` command not recognized | Install Docker Desktop and make sure it's running. |
+| Frontend won't open | Run `docker ps` to confirm the container is `Up`, then check `docker logs secondserve-frontend --tail 100`. |
+| Backend container stops or won't start | Run `docker logs secondserve-backend --tail 100` and look for `ERROR`, `APPLICATION FAILED TO START`, or `Caused by:`. |
+| Lots of Spring Security log lines | Normal startup logging. Confirm success by looking for `Started SecondServeServerApplication`, not the absence of these lines. |
