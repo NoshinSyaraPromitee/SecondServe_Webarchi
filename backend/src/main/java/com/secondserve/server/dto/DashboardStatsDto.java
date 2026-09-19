@@ -2,26 +2,18 @@ package com.secondserve.server.dto;
 
 import java.math.BigDecimal;
 
-/**
- * A Data Transfer Object used to send the calculated statistics for the
- * Hotel Manager's dashboard from the server to the client.
- */
 public class DashboardStatsDto {
 
     private BigDecimal totalDonatedThisWeek;
     private BigDecimal totalLoggedThisWeek;
     private String hotelCode;
 
-    /**
-     * A no-argument constructor is required for libraries like Jackson
-     * to deserialize JSON back into this Java object.
-     */
+
     public DashboardStatsDto() {
     }
 
     // --- Getters and Setters ---
-    // These methods allow other parts of the application (like the service and
-    // the JSON converter) to access and set the private fields.
+
 
     public BigDecimal getTotalDonatedThisWeek() {
         return totalDonatedThisWeek;

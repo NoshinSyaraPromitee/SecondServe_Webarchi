@@ -8,20 +8,17 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-/**
- * This DTO is used to transfer FoodItem data between the client and server.
- * It has been modified to exactly match the fields provided by the Kitchen Staff's FXML form.
- */
+
 public class FoodItemDto {
 
-    // These fields are mostly used for sending data FROM server TO client
+
     private Long id;
     private Long hotelId; 
     private String hotelName;
     private Boolean isAvailable;
     private LocalDateTime createdDate;
     private String currentUserRequestStatus;
-    // These fields are used for both requests and responses
+
     @NotBlank(message = "Food name is required")
     private String foodName;
 
@@ -35,7 +32,7 @@ public class FoodItemDto {
     @NotNull(message = "Expiry date is required")
     private LocalDate expiryDate;
 
-    // Optional notes field
+
     private String description;
 
     private String imageUrl;

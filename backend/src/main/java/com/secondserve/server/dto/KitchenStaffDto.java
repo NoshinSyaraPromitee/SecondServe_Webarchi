@@ -20,7 +20,6 @@ public class KitchenStaffDto {
     @NotBlank(message = "Hotel code is required")
     private String hotelCode;
 
-    // Position is optional
     private String position;
 
     // Getters and Setters

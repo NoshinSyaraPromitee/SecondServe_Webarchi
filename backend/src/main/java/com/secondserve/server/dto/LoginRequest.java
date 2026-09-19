@@ -12,7 +12,7 @@ public class LoginRequest {
     private String password;
 
     @NotBlank(message = "User type is required")
-    private String userType; // "HOTEL" or "NGO"
+    private String userType; 
 
     // Constructors
     public LoginRequest() {}

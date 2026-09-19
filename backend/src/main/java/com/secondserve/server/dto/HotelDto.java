@@ -2,7 +2,7 @@ package com.secondserve.server.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import java.math.BigDecimal; // Import for totalFoodDonated if you want to include it in the response
+import java.math.BigDecimal; 
 import java.time.LocalDateTime;
 
 public class HotelDto {
@@ -34,7 +34,6 @@ public class HotelDto {
     // --- CONSTRUCTORS, GETTERS, AND SETTERS ---
     public HotelDto() {}
 
-    // You can generate all the getters and setters automatically in your IDE
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
