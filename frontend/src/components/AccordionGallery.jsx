@@ -2,8 +2,6 @@ import { useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import "./AccordionGallery.css";
 
-// Maps common GSAP-style ease names to CSS cubic-bezier equivalents so the
-// component can be dropped in without pulling in gsap as a dependency.
 const EASE_MAP = {
     linear: "linear",
     "power1.out": "cubic-bezier(0.11, 0, 0.5, 0)",
