@@ -1,6 +1,3 @@
-// Simple fetch wrapper for the SecondServe Spring Boot backend.
-// Backend runs at http://localhost:8080/api (see application.properties: server.servlet.context-path=/api)
-
 const BASE_URL = "http://localhost:8080/api";
 
 
@@ -39,27 +36,28 @@ async function request(path, { method = "GET", body, auth = false } = {}) {
 }
 
 export const api = {
-  // --- Auth ---
+
+
+  // Auth
   login: (email, password, userType) =>
       request("/auth/login", { method: "POST", body: { email, password, userType } }),
 
-  // --- Registration ---
+
+
+
+  // Registration
   registerHotel: (payload) => request("/hotels/register", { method: "POST", body: payload }),
   registerNgo: (payload) => request("/ngos/register", { method: "POST", body: payload }),
   registerKitchenStaff: (payload) => request("/staff/register", { method: "POST", body: payload }),
 
-  // --- Hotel dashboard ---
+  // Hotel dashboard
   getDashboardStats: () => request("/hotels/dashboard-stats", { auth: true }),
   getPendingFoodItems: (hotelId) => request(`/food-items/hotel/${hotelId}/pending`, { auth: true }),
   getTodaysFoodItems: (hotelId) => request(`/food-items/hotel/${hotelId}/today`, { auth: true }),
   getHotelFoodRequests: (hotelId, status) =>
       request(`/food-requests/hotel/${hotelId}${status ? `?status=${status}` : ""}`, { auth: true }),
   getHotelFoodLog: (hotelId) => request(`/food-items/hotel/${hotelId}/log`, { auth: true }),
-  // --- Food items ---
-  // auth:true here is optional on the backend (the endpoint is public), but
-  // sending the token when an NGO is logged in lets the backend tag each item
-  // with that NGO's own request status (Requested/Approved) instead of the
-  // "Request this food" button staying up after they've already requested it.
+
   getAvailableFoodItems: () => request("/food-items/available", { auth: true }),
   createFoodItem: (payload) => request("/food-items", { method: "POST", body: payload, auth: true }),
   getMyFoodLog: () => request("/food-items/my-log", { auth: true }),
@@ -67,7 +65,9 @@ export const api = {
   rejectFoodItem: (id) => request(`/food-items/${id}`, { method: "DELETE", auth: true }),
   markFoodItemUnavailable: (id) => request(`/food-items/${id}/unavailable`, { method: "PUT", auth: true }),
   getCloudinarySignature: () => request("/cloudinary/signature", { auth: true }),
-  // --- Food requests (NGO <-> Hotel) ---
+
+
+  //  Food requests
   createFoodRequest: (payload) => request("/food-requests", { method: "POST", body: payload, auth: true }),
   approveFoodRequest: (id) => request(`/food-requests/${id}/approve`, { method: "PUT", auth: true }),
   rejectFoodRequest: (id) => request(`/food-requests/${id}/reject`, { method: "PUT", auth: true }),
