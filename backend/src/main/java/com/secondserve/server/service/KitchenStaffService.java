@@ -27,7 +27,6 @@ public class KitchenStaffService {
             throw new RuntimeException("Email address is already in use.");
         }
 
-        // Find the hotel using the code provided by the staff member
         Hotel hotel = hotelRepository.findByHotelCode(staffDto.getHotelCode())
                 .orElseThrow(() -> new ResourceNotFoundException("Invalid Hotel Code: " + staffDto.getHotelCode()));
 
@@ -36,11 +35,9 @@ public class KitchenStaffService {
         newStaff.setEmail(staffDto.getEmail());
         newStaff.setPassword(passwordEncoder.encode(staffDto.getPassword()));
         newStaff.setPosition(staffDto.getPosition());
-        newStaff.setHotel(hotel); // Establish the link to the hotel
+        newStaff.setHotel(hotel);
 
         KitchenStaff savedStaff = kitchenStaffRepository.save(newStaff);
-
-        // Generate a token for immediate login after registration
         String token = jwtUtil.generateToken(savedStaff.getEmail(), "KITCHEN_STAFF", savedStaff.getId());
 
         return new AuthResponse(token, "KITCHEN_STAFF", savedStaff.getId(), savedStaff.getStaffName(), savedStaff.getEmail());

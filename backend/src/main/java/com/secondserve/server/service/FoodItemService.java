@@ -169,9 +169,6 @@ public class FoodItemService {
                 .collect(Collectors.toList());
     }
 
-    // Full surplus food log for a hotel: every item logged by kitchen staff,
-    // regardless of approval status, newest first. Shows expiry date,
-    // condition, and logged date/time (createdDate) via the DTO.
     public List<FoodItemDto> getFoodLogForHotel(Long hotelId) {
         return foodItemRepository.findByHotelIdOrderByCreatedDateDesc(hotelId)
                 .stream()

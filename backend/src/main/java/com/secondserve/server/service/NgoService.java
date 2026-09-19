@@ -7,7 +7,7 @@ import com.secondserve.server.repository.NgoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional; // Import for @Transactional
+import org.springframework.transaction.annotation.Transactional; 
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,11 +20,7 @@ public class NgoService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    /**
-     * This is the new, dedicated method for handling NGO registration business logic.
-     * It was moved here from the old AuthService.
-     */
-    @Transactional // Ensures the entire method is a single, complete database transaction.
+    @Transactional 
     public NgoDto registerNgo(NgoDto ngoDto) {
         if (ngoRepository.existsByEmail(ngoDto.getEmail())) {
             throw new RuntimeException("Error: Email address is already in use.");

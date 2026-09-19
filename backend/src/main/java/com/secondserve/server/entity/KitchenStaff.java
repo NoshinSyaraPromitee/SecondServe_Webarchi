@@ -11,7 +11,6 @@ public class KitchenStaff {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // A many-to-one relationship: many staff members can belong to one hotel.
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hotel_id", nullable = false)
     private Hotel hotel;
