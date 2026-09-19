@@ -32,10 +32,6 @@ public class FoodItemController {
 
     @GetMapping("/available")
     public ResponseEntity<List<FoodItemDto>> getAvailableFoodItems(Authentication authentication) {
-        // If an NGO is logged in (this endpoint is public, so authentication may
-        // be null), tag each item with that NGO's own request status so the
-        // frontend can show "Requested / Approved" instead of always offering
-        // "Request this food" again for items they've already requested.
         Long ngoId = null;
         if (authentication != null) {
             ngoId = ngoRepository.findByEmail(authentication.getName())
@@ -72,15 +68,10 @@ public class FoodItemController {
         }
     }
 
-    // --- THE FIX IS HERE ---
     @PostMapping
     public ResponseEntity<FoodItemDto> createFoodItem(@Valid @RequestBody FoodItemDto foodItemDto, Authentication authentication) {
         try {
-            // Resolve the hotel from the currently logged-in kitchen staff member,
-            // instead of assuming hotel ID 1. Previously this was hardcoded, so
-            // every kitchen staff account's entries were silently filed under
-            // hotel #1 and never showed up in their own hotel manager's
-            // "pending review" list (and therefore never reached the NGO side).
+
             String email = authentication.getName();
             KitchenStaff staff = kitchenStaffRepository.findByEmail(email)
                     .orElseThrow(() -> new UsernameNotFoundException("Authenticated kitchen staff not found: " + email));
@@ -93,8 +84,6 @@ public class FoodItemController {
             return ResponseEntity.badRequest().build();
         }
     }
-
-    // --- NEW ENDPOINT for the surplus food log ---
     @GetMapping("/my-log")
     public ResponseEntity<List<FoodItemDto>> getMyFoodLog(Authentication authentication) {
         String email = authentication.getName();
@@ -105,10 +94,6 @@ public class FoodItemController {
         return ResponseEntity.ok(log);
     }
 
-    // --- NEW: full surplus food log, for the Hotel manager dashboard ---
-    // Same underlying data as /my-log, but scoped by hotelId from the path
-    // instead of resolving hotel from a KitchenStaff account, so a logged-in
-    // Hotel manager can view it too.
     @GetMapping("/hotel/{hotelId}/log")
     public ResponseEntity<List<FoodItemDto>> getFoodLogByHotel(@PathVariable Long hotelId) {
         List<FoodItemDto> log = foodItemService.getFoodLogForHotel(hotelId);

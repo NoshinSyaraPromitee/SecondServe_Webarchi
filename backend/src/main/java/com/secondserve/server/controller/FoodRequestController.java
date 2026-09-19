@@ -26,11 +26,7 @@ public class FoodRequestController {
     @PostMapping
     public ResponseEntity<FoodRequestDto> createFoodRequest(@Valid @RequestBody FoodRequestDto foodRequestDto, Authentication authentication) {
         try {
-            // Resolve the NGO from the currently logged-in user's token instead of
-            // assuming NGO ID 1. Previously this was hardcoded, so every NGO's
-            // request was silently filed under NGO #1 — the real NGO's "My
-            // requests" list (queried by their own ID) never showed it, so it
-            // looked like the request vanished and no update ever arrived.
+
             String email = authentication.getName();
             Long loggedInNgoId = ngoRepository.findByEmail(email)
                     .map(ngo -> ngo.getId())
@@ -83,7 +79,6 @@ public class FoodRequestController {
 
         if (statusStr != null && !statusStr.isBlank()) {
             try {
-                // This manually converts the string to an enum, making it case-insensitive and safe
                 RequestStatus status = RequestStatus.valueOf(statusStr.toUpperCase());
                 List<FoodRequestDto> requests = foodRequestService.getRequestsByHotelAndStatus(hotelId, status);
                 return ResponseEntity.ok(requests);
@@ -91,7 +86,6 @@ public class FoodRequestController {
                 return ResponseEntity.badRequest().body("Invalid status value: " + statusStr);
             }
         } else {
-            // If no status is provided, get all requests
             List<FoodRequestDto> requests = foodRequestService.getRequestsForHotel(hotelId);
             return ResponseEntity.ok(requests);
         }

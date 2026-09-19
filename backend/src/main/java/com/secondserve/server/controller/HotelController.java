@@ -24,22 +24,14 @@ public class HotelController {
     @Autowired
     private HotelRepository hotelRepository;
 
-    /**
-     * Handles the registration of a new Hotel Manager.
-     * No local try/catch here anymore — any exception (duplicate email, DB
-     * connection failure, etc.) now flows to GlobalExceptionHandler, which
-     * returns a proper JSON body like { "message": "...", "status": 400 }
-     * that the frontend's api.js can actually read.
-     */
+
     @PostMapping("/register")
     public ResponseEntity<HotelDto> registerHotel(@Valid @RequestBody HotelDto hotelDto) {
         HotelDto createdHotel = hotelService.registerHotel(hotelDto);
         return new ResponseEntity<>(createdHotel, HttpStatus.CREATED);
     }
 
-    /**
-     * Retrieves the statistics for the hotel manager's dashboard.
-     */
+
     @GetMapping("/dashboard-stats")
     public ResponseEntity<DashboardStatsDto> getDashboardStats(Authentication authentication) {
         try {

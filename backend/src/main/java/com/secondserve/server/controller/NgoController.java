@@ -49,7 +49,6 @@ public class NgoController {
 
     @PutMapping("/{id}")
     public ResponseEntity<NgoDto> updateNgo(@PathVariable Long id, @Valid @RequestBody NgoDto ngoDto) {
-        // NOTE: This endpoint should be secured so only the correct NGO can update their own profile.
         try {
             NgoDto updatedNgo = ngoService.updateNgo(id, ngoDto);
             return ResponseEntity.ok(updatedNgo);
@@ -60,7 +59,6 @@ public class NgoController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteNgo(@PathVariable Long id) {
-        // NOTE: This endpoint should likely be restricted to administrators.
         try {
             ngoService.deleteNgo(id);
             return ResponseEntity.noContent().build();

@@ -17,12 +17,6 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-
-    /**
-     * Authenticates a user (Hotel Manager, Kitchen Staff, or NGO) and returns a JWT.
-     * @param loginRequest The user's email, password, and userType.
-     * @return On success, an AuthResponse containing the JWT token and user details.
-     */
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         try {
