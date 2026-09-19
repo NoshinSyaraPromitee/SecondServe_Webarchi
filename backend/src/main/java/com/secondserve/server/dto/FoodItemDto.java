@@ -32,7 +32,7 @@ public class FoodItemDto {
     @NotNull(message = "Expiry date is required")
     private LocalDate expiryDate;
 
-
+    private String reviewStatus;
     private String description;
 
     private String imageUrl;
@@ -89,6 +89,9 @@ public class FoodItemDto {
     public FoodItem.Condition getCondition() { return condition; }
     public void setCondition(FoodItem.Condition condition) { this.condition = condition; }
 
+    public String getReviewStatus() { return reviewStatus; }
+    public void setReviewStatus(String reviewStatus) { this.reviewStatus = reviewStatus; }
+    
     public String getCurrentUserRequestStatus() {
         return currentUserRequestStatus;
     }

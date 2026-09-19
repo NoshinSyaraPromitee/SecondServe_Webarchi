@@ -23,6 +23,11 @@ public class FoodItem {
         NEAR_EXPIRY
     }
 
+    public enum ReviewStatus {
+        PENDING_REVIEW,
+        APPROVED
+    }
+
     // --- FIELDS ---
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -67,11 +72,17 @@ public class FoodItem {
     @Column(name = "`condition`", nullable = false)
     private Condition condition;
 
+    
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "review_status", nullable = false)
+    private ReviewStatus reviewStatus = ReviewStatus.PENDING_REVIEW;
+
     @OneToMany(mappedBy = "foodItem", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<FoodRequest> foodRequests;
 
 
-    // --- CONSTRUCTORS & METHODS ---
+    //  CONSTRUCTORS & METHODS 
     public FoodItem() {}
 
     // Getters and Setters for all fields...
@@ -109,6 +120,9 @@ public class FoodItem {
 
     public Condition getCondition() { return condition; }
     public void setCondition(Condition condition) { this.condition = condition; }
+
+    public ReviewStatus getReviewStatus() { return reviewStatus; }
+    public void setReviewStatus(ReviewStatus reviewStatus) { this.reviewStatus = reviewStatus; }
 
     public List<FoodRequest> getFoodRequests() { return foodRequests; }
     public void setFoodRequests(List<FoodRequest> foodRequests) { this.foodRequests = foodRequests; }

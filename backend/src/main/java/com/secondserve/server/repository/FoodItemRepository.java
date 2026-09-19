@@ -20,6 +20,8 @@ public interface FoodItemRepository extends JpaRepository<FoodItem, Long> {
     List<FoodItem> findByHotelAndIsAvailableFalseOrderByCreatedDateDesc(Hotel hotel);
     List<FoodItem> findByHotelIdAndIsAvailableFalse(Long hotelId);
     List<FoodItem> findByHotelIdOrderByCreatedDateDesc(Long hotelId);
+    List<FoodItem> findByHotelIdAndReviewStatus(Long hotelId, FoodItem.ReviewStatus reviewStatus);
+
     @Query("SELECT f FROM FoodItem f WHERE f.isAvailable = true AND f.expiryDate > :currentDate ORDER BY f.expiryDate ASC")
     List<FoodItem> findAvailableAndNotExpired(@Param("currentDate") LocalDate currentDate);
 

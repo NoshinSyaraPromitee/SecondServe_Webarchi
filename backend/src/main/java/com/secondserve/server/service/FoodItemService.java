@@ -25,6 +25,7 @@ public class FoodItemService {
     private HotelRepository hotelRepository;
     @Autowired
     private FoodRequestRepository foodRequestRepository;
+
     public List<FoodItemDto> getAllAvailableFoodItems(Long ngoId) {
         return foodItemRepository.findAvailableAndNotExpired(LocalDate.now())
                 .stream()
@@ -47,7 +48,7 @@ public class FoodItemService {
                 .collect(Collectors.toList());
     }
 
-    public List<FoodItemDto> getFoodItemsByHotel(Long hotelId,Long ngoId) {
+    public List<FoodItemDto> getFoodItemsByHotel(Long hotelId, Long ngoId) {
         List<FoodItem> foodItems = foodItemRepository.findByHotelIdAndIsAvailableTrue(hotelId);
         return foodItems.stream().map(foodItem -> {
             FoodItemDto dto = convertToDto(foodItem);
@@ -78,7 +79,8 @@ public class FoodItemService {
 
         FoodItem foodItem = convertToEntity(foodItemDto);
         foodItem.setHotel(hotel);
-        foodItem.setIsAvailable(false); // New items require manager approval
+        foodItem.setIsAvailable(false); 
+        foodItem.setReviewStatus(FoodItem.ReviewStatus.PENDING_REVIEW); 
 
         FoodItem savedFoodItem = foodItemRepository.save(foodItem);
         return convertToDto(savedFoodItem);
@@ -96,7 +98,7 @@ public class FoodItemService {
         foodItem.setCategory(foodItemDto.getCategory());
         foodItem.setCondition(foodItemDto.getCondition());
         foodItem.setImageUrl(foodItemDto.getImageUrl());
-        if(foodItemDto.getIsAvailable() != null) {
+        if (foodItemDto.getIsAvailable() != null) {
             foodItem.setIsAvailable(foodItemDto.getIsAvailable());
         }
 
@@ -133,13 +135,16 @@ public class FoodItemService {
         dto.setCondition(foodItem.getCondition());
         dto.setIsAvailable(foodItem.getIsAvailable());
         dto.setCreatedDate(foodItem.getCreatedDate());
+        dto.setReviewStatus(foodItem.getReviewStatus().name()); 
         return dto;
     }
+
     public void markAsAvailable(Long id) {
         FoodItem foodItem = foodItemRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Food item not found with id: " + id));
 
-        foodItem.setIsAvailable(true);
+        foodItem.setReviewStatus(FoodItem.ReviewStatus.APPROVED); 
+        foodItem.setIsAvailable(true); 
         foodItemRepository.save(foodItem);
     }
 
@@ -155,15 +160,20 @@ public class FoodItemService {
         foodItem.setImageUrl(dto.getImageUrl());
         return foodItem;
     }
+
     public List<FoodItemDto> getFoodItemsByHotelPending(Long hotelId) {
-        return foodItemRepository.findByHotelIdAndIsAvailableFalse(hotelId)
+        return getPendingFoodItemsByHotel(hotelId);
+    }
+
+    public List<FoodItemDto> getPendingFoodItemsByHotel(Long hotelId) {
+        return foodItemRepository.findByHotelIdAndReviewStatus(hotelId, FoodItem.ReviewStatus.PENDING_REVIEW)
                 .stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
-    public List<FoodItemDto> getPendingFoodItemsByHotel(Long hotelId) {
-        return foodItemRepository.findByHotelIdAndIsAvailableFalse(hotelId)
+    public List<FoodItemDto> getApprovedFoodItemsByHotel(Long hotelId) {
+        return foodItemRepository.findByHotelIdAndReviewStatus(hotelId, FoodItem.ReviewStatus.APPROVED)
                 .stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());

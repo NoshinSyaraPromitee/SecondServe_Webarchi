@@ -151,4 +151,10 @@ public class FoodItemController {
         List<FoodItemDto> foodItems = foodItemService.getTodaysFoodItemsByHotel(hotelId);
         return ResponseEntity.ok(foodItems);
     }
+    
+    @GetMapping("/hotel/{hotelId}/approved")
+    public ResponseEntity<List<FoodItemDto>> getApprovedFoodItemsByHotel(@PathVariable Long hotelId) {
+        List<FoodItemDto> foodItems = foodItemService.getApprovedFoodItemsByHotel(hotelId);
+        return ResponseEntity.ok(foodItems);
+    }
 }
